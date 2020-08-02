@@ -14,6 +14,14 @@ def necron_immortal_stats_dict():
     return {
         'move': 6,
         'bs': 3,
+        'ws': 3,
+        's': 4,
+        't': 4,
+        'w': 1,
+        'a': 1,
+        'ld': 10,
+        'sv': 3,
+        'invuln': 0,
     }
 
 @pytest.fixture
@@ -28,6 +36,22 @@ def skitarii_ranger_stats_dict():
         'a': 1,
         'ld': 6,
         'sv': 4,
+        'invuln': 6,
+    }
+
+@pytest.fixture
+def genestealer_stats_dict():
+    return {
+        'm': 8,
+        'bs': 3,
+        'ws': 4,
+        's': 4,
+        't': 4,
+        'w': 1,
+        'a': 3,
+        'ld': 9,
+        'sv': 5,
+        'invuln': 5,
     }
 
 @pytest.fixture
