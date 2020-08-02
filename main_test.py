@@ -2,6 +2,13 @@ import pytest
 
 import main
 
+def assert_approx_eq(v1, v2, ep=0.00001):
+    if (v2 < v1 + ep) and (v2 > v1 - ep):
+        assert True
+    else:
+        tmp_str = f"{v1} !~= {v2}"
+        assert False, tmp_str #f"{v1} !~= {v2}"
+
 @pytest.fixture
 def necron_immortal_stats_dict():
     return {
@@ -65,3 +72,45 @@ def test_wound_outs():
     toughness = 1
     assert main.wound_outs(strength, toughness) == 5
     
+def test_defeats_save_base():
+    sv = 2
+    assert_approx_eq(main.defeat_save_probability(sv), float(1/6))
+    sv = 6
+    assert_approx_eq(main.defeat_save_probability(sv), float(5/6))
+
+def test_defeats_invuln():
+    sv = 2
+    assert_approx_eq(main.defeat_invuln_probability(sv), float(1/6))
+    sv = 6
+    assert_approx_eq(main.defeat_invuln_probability(sv), float(5/6))
+
+def test_defeat_armor():
+    sv = 4
+    ap = 0
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), float(3/6))
+    sv = 4
+    ap = -1
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), float(4/6))
+    sv = 4
+    ap = -2
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), float(5/6))
+    sv = 6
+    ap = 0
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), float(5/6))
+    sv = 6
+    ap = -1
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), 0.0)
+    sv = 6
+    ap = -2
+    assert_approx_eq(main.defeat_armor_probability(sv, ap), 0.0)
+
+def test_expected_damage():
+    damage = 1
+    assert main.expected_damage(damage) == 1
+    damage = 3
+    assert main.expected_damage(damage) == 3
+    damage = "d3"
+    assert main.expected_damage(damage) == 2
+    damage = "d6"
+    assert main.expected_damage(damage) == 3.5
+

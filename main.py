@@ -5,7 +5,7 @@ def wounds_per_phase(attacker, wargear, attackee, situation):
 def expected_wounds_generic(attack, defense):
     pass
 
-_outs = {
+_d6_outs = {
     6: 1,
     5: 2,
     4: 3,
@@ -15,7 +15,7 @@ _outs = {
 }
 
 def outs_at_or_above(value):
-    return _outs[value]
+    return _d6_outs[value]
 
 def wound_outs(strength, toughness):
     ratio = strength / toughness
@@ -30,6 +30,41 @@ def wound_outs(strength, toughness):
     else:
         return 1
 
+def wound_probability(strength, toughness):
+    return wound_outs(strength, toughness) / 6
 
 def hit_probability(skill):
     return outs_at_or_above(skill) / 6
+
+def save_probability(sv):
+    return _d6_outs[sv]/6
+
+def defeat_save_probability(sv):
+    if sv:
+        return 1.0 - save_probability(sv)
+    else:
+        return 1.0
+
+def defeat_invuln_probability(invuln):
+    if invuln:
+        return 1.0 - save_probability(invuln)
+    else:
+        return 1.0
+
+def defeat_armor_probability(sv, ap):
+  outs = 6 - sv + 1 + ap
+  if outs <= 0:
+    return 0.0
+  else: 
+    return 1 - outs / 6
+
+_expected_damage_table = {
+    "d3": 2,
+    "d6": 3.5,
+}
+
+def expected_damage(damage):
+    if isinstance(damage, str):
+        return _expected_damage_table[damage]
+    else:
+        return damage
